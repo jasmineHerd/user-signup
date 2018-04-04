@@ -7,7 +7,7 @@ import jinja2
 #where templates
 template_dir = os.path.join(os.path.dirname(__file__),'templates')
 #initialize jinja engine
-jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir))
+jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),autoescape = True)
 
 
 app = Flask(__name__)
