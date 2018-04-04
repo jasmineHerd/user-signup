@@ -32,6 +32,7 @@ form = '''
             <input name="email" type="text" value='{email}' />
         </label>
         <span class="error">{email_error}</span>
+        <br>
         <input type="submit" value="submit" />
 
         
@@ -61,9 +62,17 @@ def homepage():
 
 
     #USER ERROR
-    if len(username)==0:
-       user_error = "Error"
+     #if " " in username = username-1 OK!
+    username = username.strip()
+    if (len(username)==0)or (len(username) > 20):
+       user_error = "Please enter a username"
+    if (len(username)>0 and len(username) < 3):
+        user_error = "Username too short"
+    if (" " in username):
+        user_error = "No spaces allowed in username"
 
+   
+    #PASSWORD ERROR
     if len(password) == 0:
         pass_error = "Enter Password"
     
@@ -82,8 +91,9 @@ def homepage():
         passVerify_error=passVerify_error,passwordVerify=passwordVerify,
         email=email, email_error=email_error)
 
-@app.route("/welcomePage/" )
+@app.route("/welcomePage/",methods = ['POST'] )
 def welcomePage():
-    return ("NO ERRORS WOOT WOOT")
+    username = request.form['username']
+    return (username)
 
 app.run()
