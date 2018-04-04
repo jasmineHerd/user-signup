@@ -17,16 +17,12 @@ app.config['DEBUG'] = True
 
 
 
-@app.route("/homepage")
+@app.route("/")
 def index():
     template = jinja_env.get_template("Input_forms.html")
+    return template.render()
 
-    return template.render(username='',user_error='',
-    password='',pass_error ='',
-    passwordVerify = '', passVerify_error = '',
-    email = '',email_error = '')
-
-@app.route('/homepage',methods=['POST'])
+@app.route("/",methods=['POST'])
 def homepage():
     template = jinja_env.get_template("Input_forms.html")
     username = request.form['username']
@@ -70,9 +66,8 @@ def homepage():
         passVerify_error=passVerify_error,passwordVerify=passwordVerify,
         email=email, email_error=email_error)
 
-@app.route("/welcomePage/",methods = ['POST'] )
+@app.route("/welcomePage/")
 def welcomePage():
-    username = request.form['username']
-    return (username)
+    return "Hey"
 
 app.run()
