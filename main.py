@@ -1,30 +1,17 @@
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect,render_template
 import cgi
-#JINGA SETUP
-import os
-import jinja2
-
-#where templates
-template_dir = os.path.join(os.path.dirname(__file__),'templates')
-#initialize jinja engine
-jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),autoescape = True)
 
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
 
-
-
-
 @app.route("/")
 def index():
-    template = jinja_env.get_template("Input_forms.html")
-    return template.render()
+    return render_template("Input_forms.html")
 
 @app.route("/",methods=['POST'])
 def homepage():
-    template = jinja_env.get_template("Input_forms.html")
     username = request.form['username']
     password =request.form['password']
     passwordVerify=request.form['passwordVerify']
@@ -50,24 +37,37 @@ def homepage():
     #PASSWORD ERROR
     if len(password) == 0:
         pass_error = "Enter Password"
-    
     if len(passwordVerify)== 0:
         passVerify_error = "Verify Password"
-    
-    if len(email) > 0 and len(email) < 3:
+    if len(password) < 3 and len(password) > 20:
+        pass_error = "Password length"
+    if password != passwordVerify:
+        pass_error = "passwords do not match"
+        passVerify_error = "passwords do not match"
+    if pass_error or passVerify_error:
+        password = ""
+        passwordVerify = ""
+
+
+
+    #EMAIL ERROR    
+    if (len(email) > 0 and len(email) < 3) and ( "@" not in email):
         email_error = "enter valid email"
 
 
     if not user_error and not pass_error and not passVerify_error and not email_error:
-        return redirect('/welcomePage')
+        return redirect('/welcomePage?username='+ username)
     else:
-        return template.render(username=username,user_error=user_error,
+        return render_template("Input_forms.html",username=username,user_error=user_error,
         password = password,pass_error=pass_error,
         passVerify_error=passVerify_error,passwordVerify=passwordVerify,
         email=email, email_error=email_error)
 
 @app.route("/welcomePage/")
 def welcomePage():
-    return "Hey"
+    
+    username = request.args.get('username')
+    return render_template("welcome.html",username=username)
+
 
 app.run()
