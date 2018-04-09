@@ -53,6 +53,8 @@ def homepage():
     #EMAIL ERROR    
     if (len(email) > 0 and len(email) < 3) and ( "@" not in email):
         email_error = "enter valid email"
+    if " " in email:
+        email_error = "Spaces invalid"
 
 
     if not user_error and not pass_error and not passVerify_error and not email_error:
